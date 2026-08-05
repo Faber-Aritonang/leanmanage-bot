@@ -1,0 +1,26 @@
+{
+  "name": "leanmanage-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Faber-Aritonang/leanmanage-bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Faber-Aritonang/leanmanage-bot/issues"
+  },
+  "homepage": "https://github.com/Faber-Aritonang/leanmanage-bot#readme",
+  "devDependencies": {
+    "@types/node": "^26.1.2",
+    "prisma": "^7.9.1",
+    "tsx": "^4.23.8",
+    "typescript": "^7.0.2"
+  }
+}
