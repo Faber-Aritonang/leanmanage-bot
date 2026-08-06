@@ -1,3 +1,4 @@
+
 # LeanManage Kanban # LeanManage Kanban Bot 🤖📊
 
 LeanManage adalah sistem manajemen operasional (Kanban) berbasis Telegram Bot yang dirancang khusus dengan mengadopsi prinsip **Lean System** dan **Toyota Way**. 
@@ -8,17 +9,19 @@ Bot ini bertindak sebagai asisten operasional cerdas yang memungkinkan tim untuk
 
 ## 🌟 Fitur Utama (Minimum Viable Product v1.0.0)
 
-1. **Pencatatan Otomatis via AI (Natural Language Processing)**
+1. **Menu Interaktif & Panduan Informasi (`/start`)**
+   Menyediakan sapaan fungsional interaktif yang langsung menjelaskan identitas bot, kegunaan utama, pencapaian sistem, serta tombol menu biru (`/`) di Telegram untuk akses perintah yang mudah. 
+2. **Pencatatan Otomatis via AI (Natural Language Processing)**
    Cukup ketik tugas menggunakan bahasa sehari-hari. Bot menggunakan **Claude 3 Haiku** untuk mengekstrak Judul, Prioritas, dan Departemen, lalu menyimpannya secara otomatis ke papan Kanban.
-2. **Poka-Yoke (Sistem Anti-Duplikasi)**
+3. **Poka-Yoke (Sistem Anti-Duplikasi)**
    Bot memiliki mekanisme perlindungan otomatis untuk mencegah masuknya tugas dengan judul yang identik, menghilangkan pemborosan (*waste*) administratif akibat data ganda.
-3. **Kepemilikan Jelas (Clear Ownership)**
+4. **Kepemilikan Jelas (Clear Ownership)**
    Menghindari ambiguitas tanggung jawab (*Diffusion of Responsibility*). Anggota tim dapat mengambil tugas (*Pull System* via tombol `[🙋 Ambil]`) atau ditugaskan secara manual oleh manajer (*Push System* via `/assign`).
-4. **Pelacakan SLA (Service Level Agreement)**
+5. **Pelacakan SLA (Service Level Agreement)**
    Menetapkan target hari penyelesaian (`/due`). Bot akan mengawasi tugas-tugas ini dan memberikan bendera ⚠️ OVERDUE jika tugas melewati tenggat waktu.
-5. **Penghitungan Lead Time Aktual**
+6. **Penghitungan Lead Time Aktual**
    Saat tugas ditandai selesai, sistem akan menghitung durasi waktu secara *real-time* (dalam Hari, Jam, Menit) dari sejak tugas diciptakan hingga selesai.
-6. **Laporan Eksekutif Harian (AI Review)**
+7. **Laporan Eksekutif Harian (AI Review)**
    Perintah `/review` akan menginstruksikan AI untuk membaca seluruh isi *database*, mengidentifikasi *bottleneck*, dan memberikan rekomendasi Kaizen bagi tim.
 
 ---
