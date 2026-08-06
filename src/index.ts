@@ -16,11 +16,39 @@ const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN || "");
 
+// Daftarkan menu perintah otomatis agar muncul di tombol biru Telegram (Bot Menu)
+bot.telegram.setMyCommands([
+  { command: "start", description: "Informasi sistem & panduan bot" },
+  { command: "list", description: "Menampilkan daftar task aktif di Kanban" },
+  { command: "board", description: "Menampilkan task berdasarkan departemen" },
+  { command: "due", description: "Menetapkan target SLA (Contoh: /due 1 3)" },
+  { command: "assign", description: "Menugaskan task ke anggota tim" },
+  { command: "review", description: "Laporan eksekutif harian & analitik AI" },
+  { command: "delete", description: "Menghapus task dari sistem (Contoh: /delete 1)" }
+]);
+
+// Salam & Informasi Sistem yang Rinci dan Fungsional
 bot.start((ctx) => {
-  ctx.reply("Halo! Saya LeanManage Bot. Kirimkan perintah atau tugas baru dengan bahasa sehari-hari, dan saya akan mencatatnya ke sistem Kanban kita.");
+  const welcomeText = 
+    `🤖 *LeanManage Bot - Sistem Operasional Kanban* 📊\n\n` +
+    `*Apa itu bot ini?* \n` +
+    `Asisten manajemen tugas berbasis kecerdasan buatan (AI) yang mengadopsi prinsip _Lean System & Toyota Way_ untuk mengotomatisasi alur kerja tim langsung dari Telegram.\n\n` +
+    `🎯 *Kegunaan Utama:*\n` +
+    `• Mengubah teks percakapan bebas menjadi tiket Kanban terstruktur secara otomatis.\n` +
+    `• Mengelola kepemilikan tugas (*Assignee*) dan filter berdasarkan departemen.\n\n` +
+    `📈 *Pencapaian & Metrik yang Dihasilkan:*\n` +
+    `• **Poka-Yoke:** Mencegah pemborosan akibat duplikasi data tugas yang sama.\n` +
+    `• **SLA & Overdue Tracking:** Mengontrol target tenggat waktu penyelesaian tugas.\n` +
+    `• **Lead Time Measurement:** Menghitung durasi aktual penyelesaian tugas secara real-time.\n` +
+    `• **AI Executive Review:** Menganalisis bottleneck dan memberikan rekomendasi Kaizen harian.\n\n` +
+    `💡 *Cara Pakai Cepat:*\n` +
+    `Ketik langsung tugas Anda di sini (Contoh: _"Buat laporan bulanan (Priority: High) - Finance"_)\n` +
+    `Atau klik tombol menu \`/\` di sebelah kolom ketik untuk melihat daftar perintah.`;
+
+  ctx.reply(welcomeText, { parse_mode: "Markdown" });
 });
 
-// Fitur SLA / Due Date dengan Error Logging Transparan
+// Fitur SLA / Due Date
 bot.command("due", async (ctx) => {
   try {
     const args = ctx.message.text.split(" ").slice(1);
@@ -41,7 +69,6 @@ bot.command("due", async (ctx) => {
     await ctx.reply(`🗓️ *SLA Berhasil Ditetapkan!*\n\n📌 *${updatedTask.title}*\n🎯 Target Selesai: *${dueDate.toLocaleDateString("id-ID")}*`, { parse_mode: "Markdown" });
   } catch (error: any) {
     console.error("Gagal menetapkan due date:", error);
-    // Menampilkan error asli dari Prisma langsung ke Telegram
     await ctx.reply(`❌ *Gagal menetapkan tenggat waktu!*\n\n*Pesan Sistem:*\n\`${error.message}\``, { parse_mode: "Markdown" });
   }
 });
@@ -230,12 +257,12 @@ bot.on("text", async (ctx) => {
 
     await ctx.telegram.editMessageText(ctx.chat.id, loadingMsg.message_id, undefined, `✅ *Task Berhasil Ditambahkan!*\n\n🆔 ID: \`${newTask.id}\`\n📌 *Judul*: ${newTask.title}\n⚡ *Prioritas*: ${newTask.priority}`, { parse_mode: "Markdown" });
   } catch (error) {
-    await ctx.reply("❌ Terjadi kesalahan saat memproses task Anda.");
+    await ctx.reply("❌ Maaf, terjadi kesalahan saat memproses task Anda.");
   }
 });
 
 bot.launch().then(() => {
-  console.log("🤖 LeanManage Bot: Error Logging Aktif...");
+  console.log("🤖 LeanManage Bot: Pesan Sistem & Salam Informatif Aktif...");
 });
 
 process.once("SIGINT", () => bot.stop("SIGINT"));
