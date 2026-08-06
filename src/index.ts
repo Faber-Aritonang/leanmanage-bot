@@ -274,3 +274,14 @@ bot.launch().then(() => {
 
 process.once("SIGINT", () => bot.stop("SIGINT"));
 process.once("SIGTERM", () => bot.stop("SIGTERM"));
+
+// --- DUMMY WEB SERVER UNTUK RENDER FREE TIER ---
+import("http").then((http) => {
+  const PORT = process.env.PORT || 3000;
+  http.createServer((req, res) => {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end("LeanManage Bot is alive and running!");
+  }).listen(PORT, () => {
+    console.log(`🌐 Dummy Web Server aktif di port ${PORT}`);
+  });
+});
