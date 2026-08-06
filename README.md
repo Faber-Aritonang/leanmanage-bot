@@ -62,21 +62,24 @@ LeanManage adalah sistem manajemen operasional (Kanban) berbasis Telegram Bot ya
 Bot ini bertindak sebagai asisten operasional cerdas yang memungkinkan tim untuk mencatat tugas, menetapkan target penyelesaian (SLA), mendeteksi pemborosan (duplikasi/redundansi), serta mengukur efisiensi kerja (*Lead Time*) secara instan dari aplikasi Telegram.
 
 ---
+## 🌟 Versi & Histori Rilis
 
-## 🌟 Fitur Utama (Minimum Viable Product v1.0.0)
+### 🚀 v1.2.0 (Executive Web Dashboard)
+- **Executive Web Dashboard (Next.js & Tailwind CSS):** Antarmuka web visual eksternal (Andon) untuk memantau performa operasional langsung dari browser.
+- **KPI Metrics Cards:** Ringkasan Total Task Aktif, Task WIP, SLA Compliance, dan Deteksi Bottleneck/Overdue secara *real-time*.
+- **Workload Balance Analytics:** Tabel analitik untuk memantau beban kerja masing-masing anggota tim agar terhindar dari *overburden* (*muri*).
+- **Database Synchronization:** Terhubung secara langsung dengan Prisma dan PostgreSQL yang sama dengan Telegram Bot.
 
-1. **Pencatatan Otomatis via AI (Natural Language Processing)**
-   Cukup ketik tugas menggunakan bahasa sehari-hari. Bot menggunakan **Claude 3 Haiku** untuk mengekstrak Judul, Prioritas, dan Departemen, lalu menyimpannya secara otomatis ke papan Kanban.
-2. **Poka-Yoke (Sistem Anti-Duplikasi)**
-   Bot memiliki mekanisme perlindungan otomatis untuk mencegah masuknya tugas dengan judul yang identik, menghilangkan pemborosan (*waste*) administratif akibat data ganda.
-3. **Kepemilikan Jelas (Clear Ownership)**
-   Menghindari ambiguitas tanggung jawab (*Diffusion of Responsibility*). Anggota tim dapat mengambil tugas (*Pull System* via tombol `[🙋 Ambil]`) atau ditugaskan secara manual oleh manajer (*Push System* via `/assign`).
-4. **Pelacakan SLA (Service Level Agreement)**
-   Menetapkan target hari penyelesaian (`/due`). Bot akan mengawasi tugas-tugas ini dan memberikan bendera ⚠️ OVERDUE jika tugas melewati tenggat waktu.
-5. **Penghitungan Lead Time Aktual**
-   Saat tugas ditandai selesai, sistem akan menghitung durasi waktu secara *real-time* (dalam Hari, Jam, Menit) dari sejak tugas diciptakan hingga selesai.
-6. **Laporan Eksekutif Harian (AI Review)**
-   Perintah `/review` akan menginstruksikan AI untuk membaca seluruh isi *database*, mengidentifikasi *bottleneck*, dan memberikan rekomendasi Kaizen bagi tim.
+### 🤖 v1.1.0 (Interactive Menu & Onboarding)
+- **Menu Interaktif (`/start`):** Informasi fungsional sistem, kegunaan utama, serta pencapaian penggunaan bot yang jelas.
+- **Telegram Bot Commands Menu:** Tombol menu biru (`/`) di Telegram untuk akses perintah cepat.
+
+### 📌 v1.0.0 (Minimum Viable Product - Core Kanban & AI)
+- **Natural Language Processing (NLP):** Pencatatan task otomatis via Claude 3 Haiku dari teks percakapan bebas.
+- **Poka-Yoke:** Sistem anti-duplikasi tugas identik.
+- **Clear Ownership & SLA Tracking:** Fitur ambil task otomatis (`[🙋 Ambil]`), penugasan (`/assign`), dan batas waktu (`/due`).
+- **Lead Time Measurement:** Penghitungan durasi aktual penyelesaian tugas secara akurat.
+- **AI Executive Review (`/review`):** Laporan analitik harian dan rekomendasi Kaizen.
 
 ---
 
