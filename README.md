@@ -107,3 +107,13 @@ npx prisma generate
 
 # 5. Jalankan Bot
 npx tsx src/index.ts
+
+📖 Daftar Perintah Bot Telegram
+Perintah                                        Deskripsi
+(Teks Biasa)                                  Menambahkan tugas baru menggunakan bahasa natural.
+/list                                         Menampilkan 5 tugas terbaru di papan Kanban umum.
+/board <Dept>                                 Memfilter tugas berdasarkan departemen.
+/assign <ID> <Nama>                           Menugaskan tugas ke anggota tim tertentu.
+/due <ID> <Hari>                              Menetapkan target penyelesaian (SLA).
+/review                                       Laporan analitik harian, deteksi bottleneck.
+/delete <ID>                                  Menghapus tugas dari sistem secara manual.
