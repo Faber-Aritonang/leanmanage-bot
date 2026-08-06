@@ -16,18 +16,16 @@ const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN || "");
 
-// Daftarkan menu perintah otomatis agar muncul di tombol biru Telegram (Bot Menu)
 bot.telegram.setMyCommands([
   { command: "start", description: "Informasi sistem & panduan bot" },
   { command: "list", description: "Menampilkan daftar task aktif di Kanban" },
   { command: "board", description: "Menampilkan task berdasarkan departemen" },
-  { command: "due", description: "Menetapkan target SLA (Contoh: /due 1 3)" },
+  { command: "due", description: "Menetapkan target SLA (Contoh: /due 8 3)" },
   { command: "assign", description: "Menugaskan task ke anggota tim" },
   { command: "review", description: "Laporan eksekutif harian & analitik AI" },
-  { command: "delete", description: "Menghapus task dari sistem (Contoh: /delete 1)" }
+  { command: "delete", description: "Menghapus task dari sistem (Contoh: /delete 8)" }
 ]);
 
-// Salam & Informasi Sistem yang Rinci dan Fungsional
 bot.start((ctx) => {
   const welcomeText = 
     `🤖 *LeanManage Bot - Sistem Operasional Kanban* 📊\n\n` +
@@ -48,15 +46,21 @@ bot.start((ctx) => {
   ctx.reply(welcomeText, { parse_mode: "Markdown" });
 });
 
-// Fitur SLA / Due Date
+// Fitur SLA / Due Date dengan validasi Poka-Yoke ID Task
 bot.command("due", async (ctx) => {
   try {
     const args = ctx.message.text.split(" ").slice(1);
-    if (args.length < 2) return ctx.reply("⚠️ Format salah. Contoh untuk target 3 hari: `/due 1 3`", { parse_mode: "Markdown" });
+    if (args.length < 2) return ctx.reply("⚠️ Format salah. Contoh untuk target 3 hari pada ID 8: `/due 8 3`", { parse_mode: "Markdown" });
 
     const taskId = parseInt(args[0], 10);
     const days = parseInt(args[1], 10);
     if (isNaN(taskId) || isNaN(days)) return ctx.reply("❌ ID Task dan jumlah hari harus berupa angka.");
+
+    // Periksa apakah task dengan ID tersebut benar-benar ada
+    const existingTask = await prisma.task.findUnique({ where: { id: taskId } });
+    if (!existingTask) {
+      return ctx.reply(`⚠️ *Poka-Yoke Warning*\n\nTask dengan ID \`#${taskId}\` tidak ditemukan di dalam sistem Kanban. Periksa kembali ID task menggunakan perintah \`/list\`.`, { parse_mode: "Markdown" });
+    }
 
     const dueDate = new Date();
     dueDate.setDate(dueDate.getDate() + days);
@@ -73,14 +77,16 @@ bot.command("due", async (ctx) => {
   }
 });
 
-// Fitur Hapus Task Manual
 bot.command("delete", async (ctx) => {
   try {
     const args = ctx.message.text.split(" ").slice(1);
-    if (args.length === 0) return ctx.reply("⚠️ Format salah. Contoh: `/delete 2`", { parse_mode: "Markdown" });
+    if (args.length === 0) return ctx.reply("⚠️ Format salah. Contoh: `/delete 8`", { parse_mode: "Markdown" });
 
     const taskId = parseInt(args[0], 10);
     if (isNaN(taskId)) return ctx.reply("❌ ID Task harus berupa angka.");
+
+    const existingTask = await prisma.task.findUnique({ where: { id: taskId } });
+    if (!existingTask) return ctx.reply(`⚠️ Task dengan ID \`#${taskId}\` tidak ditemukan.`);
 
     await prisma.task.delete({ where: { id: taskId } });
     await ctx.reply(`🗑️ *Task ID ${taskId} berhasil dihapus dari sistem.*`, { parse_mode: "Markdown" });
@@ -89,15 +95,17 @@ bot.command("delete", async (ctx) => {
   }
 });
 
-// Fitur Penugasan Manual
 bot.command("assign", async (ctx) => {
   try {
     const args = ctx.message.text.split(" ").slice(1);
-    if (args.length < 2) return ctx.reply("⚠️ Format salah. Contoh: `/assign 1 Budi`", { parse_mode: "Markdown" });
+    if (args.length < 2) return ctx.reply("⚠️ Format salah. Contoh: `/assign 8 TMA MAUI`", { parse_mode: "Markdown" });
 
     const taskId = parseInt(args[0], 10);
     const assigneeName = args.slice(1).join(" ").trim();
     if (isNaN(taskId)) return ctx.reply("❌ ID Task harus berupa angka.");
+
+    const existingTask = await prisma.task.findUnique({ where: { id: taskId } });
+    if (!existingTask) return ctx.reply(`⚠️ Task dengan ID \`#${taskId}\` tidak ditemukan.`);
 
     let targetUser = await prisma.user.findFirst({ where: { name: { contains: assigneeName, mode: "insensitive" } } });
     if (!targetUser) return ctx.reply(`❌ Pengguna *${assigneeName}* tidak ditemukan.`, { parse_mode: "Markdown" });
@@ -114,7 +122,6 @@ bot.command("assign", async (ctx) => {
   }
 });
 
-// Fitur Laporan Eksekutif
 bot.command("review", async (ctx) => {
   try {
     await ctx.reply("📊 Menganalisis kondisi Kanban, beban kerja, dan SLA...");
@@ -262,7 +269,7 @@ bot.on("text", async (ctx) => {
 });
 
 bot.launch().then(() => {
-  console.log("🤖 LeanManage Bot: Pesan Sistem & Salam Informatif Aktif...");
+  console.log("🤖 LeanManage Bot: Validasi ID Task (Poka-Yoke) Aktif...");
 });
 
 process.once("SIGINT", () => bot.stop("SIGINT"));
