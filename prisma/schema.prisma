@@ -7,32 +7,34 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  telegramId   BigInt   @unique
-  name         String
-  role         Role     @default(MEMBER)
-  department   String?  
+  id          Int      @id @default(autoincrement())
+  telegramId  BigInt   @unique
+  name        String
+  role        Role     @default(MEMBER)
+  department  String?  
   
   tasksCreated Task[]   @relation("Reporter")
   tasksAssigned Task[]  @relation("Assignee")
 
-  createdAt    DateTime @default(now())
+  createdAt   DateTime @default(now())
 }
 
 model Task {
-  id           Int      @id @default(autoincrement())
-  title        String
-  priority     Priority @default(MEDIUM)
-  status       Status   @default(BACKLOG)
+  id          Int      @id @default(autoincrement())
+  title       String
+  priority    Priority @default(MEDIUM)
+  status      Status   @default(BACKLOG)
   
-  reporterId   Int
-  reporter     User     @relation("Reporter", fields: [reporterId], references: [id])
+  reporterId  Int
+  reporter    User     @relation("Reporter", fields: [reporterId], references: [id])
   
-  assigneeId   Int?
-  assignee     User?    @relation("Assignee", fields: [assigneeId], references: [id])
+  assigneeId  Int?
+  assignee    User?    @relation("Assignee", fields: [assigneeId], references: [id])
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  dueDate     DateTime?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 enum Role {
