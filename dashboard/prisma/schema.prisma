@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  telegramId  BigInt   @unique
+  name        String
+  role        Role     @default(MEMBER)
+  department  String?  
+  
+  tasksCreated Task[]   @relation("Reporter")
+  tasksAssigned Task[]  @relation("Assignee")
+
+  createdAt   DateTime @default(now())
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  title       String
+  priority    Priority @default(MEDIUM)
+  status      Status   @default(BACKLOG)
+  
+  reporterId  Int
+  reporter    User     @relation("Reporter", fields: [reporterId], references: [id])
+  
+  assigneeId  Int?
+  assignee    User?    @relation("Assignee", fields: [assigneeId], references: [id])
+
+  dueDate     DateTime?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum Status {
+  BACKLOG
+  WIP
+  REVIEW
+  DONE
+}
